@@ -20,15 +20,16 @@ public class TriggerThreadService extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("Note","Service Started");
         //define the thread
-
         Thread thread= new Thread() {
             @Override
             public void run() {
                 //check for Connectivity
                 while ( NetWorkUtil.getConnectivityStatus(getApplicationContext())!= NetWorkUtil.TYPE_NOT_CONNECTED ) {
-                    Log.d("Note","Service Started");
+                    
                     try {
+                        //make any task you want every 5 minutes 'I made it only 5 sec to see the results faster instead of waiting 30 seconds'
                         Thread.sleep(5000);
                         Log.d(MESSAGE_TAG,"thread running");
                     } catch (InterruptedException e) {
