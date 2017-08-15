@@ -7,16 +7,42 @@ import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
+    public final OnNetworkChangeBroadCastRevicer NetBroadCasrReciver=new OnNetworkChangeBroadCastRevicer();
+    public final IntentFilter intentFilter=new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //intent filter for the network connectivity action
-        IntentFilter intentFilter=new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+
         //the Defined class for broadcast receiver
-        OnNetworkChangeBroadCastRevicer NetBroadCasrReciver=new OnNetworkChangeBroadCastRevicer();
+
         //register the broadcast receiver dynamically
         //it can be registered  in the manifest
         registerReceiver(NetBroadCasrReciver,intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(NetBroadCasrReciver);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(NetBroadCasrReciver,intentFilter);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        registerReceiver(NetBroadCasrReciver,intentFilter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(NetBroadCasrReciver);
     }
 }
