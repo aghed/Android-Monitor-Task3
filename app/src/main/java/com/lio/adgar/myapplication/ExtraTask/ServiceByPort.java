@@ -24,7 +24,7 @@ public class ServiceByPort extends AsyncTask<String,Void,ServiceRow>{
         
         String DB_NAME=context.getApplicationInfo().dataDir+"/databases/ServicesByPortDB.db";
         Log.d("note",DB_NAME);
-        String Port= (String) params[0];
+        String Port= params[0];
         //defined class to provide sqlite helper
         FeedServiceDBHelper feedServiceDBHelper=new FeedServiceDBHelper(context);
         //custom method fully explained in the feedServiceDbHelper class
@@ -35,7 +35,7 @@ public class ServiceByPort extends AsyncTask<String,Void,ServiceRow>{
                 NetService.FeedService.COL_DESCRIPTION};
         //search conditions
         String selection= NetService.FeedService.COL_PORT+"=?";
-        String selectionArgs[]={"21"};
+        String selectionArgs[]={Port};
         //search the database for the given port
         Cursor testcursor=db.rawQuery("SELECT * FROM sqlite_master WHERE type='table';",null);
         testcursor.moveToFirst();
@@ -51,6 +51,8 @@ public class ServiceByPort extends AsyncTask<String,Void,ServiceRow>{
             Log.d("note","service : "+servicename+"\n protocol : "+protocol);
             return new ServiceRow(servicename,protocol,descreption);
         }
+        //no port match was found
+        Log.d("note","no port matched");
         return null;
     }
 

@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     public final OnNetworkChangeBroadCastRevicer NetBroadCasrReciver=new OnNetworkChangeBroadCastRevicer();
     public final IntentFilter intentFilter=new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-    public byte[]buffer=new byte[10];
+    public Thread thread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,16 +29,25 @@ public class MainActivity extends AppCompatActivity {
 
         //register the broadcast receiver dynamically
         //it can be registered  in the manifest
-        registerReceiver(NetBroadCasrReciver,intentFilter);
-        //test the service
-        String port="21";
-        new ServiceByPort(this).execute(port);
+        //I made inside a thread because it was halting execution
+        thread=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                registerReceiver(NetBroadCasrReciver,intentFilter);
+            }
+        });
+        thread.start();
+        //test ServiceByPort with any port
+        String testport="443";
+        new ServiceByPort(this).execute(testport);
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d("note","app destroyed");
+        NetBroadCasrReciver.StopTheServiceOnUnregister(getApplicationContext());
         unregisterReceiver(NetBroadCasrReciver);
     }
 

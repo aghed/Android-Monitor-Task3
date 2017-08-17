@@ -13,17 +13,18 @@ import android.widget.Toast;
 public class TriggerThreadService extends Service{
     public static final String MESSAGE_TAG="note";
     public String CONNECTION_TYPE;
+    private Thread thread;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
-
+    private Boolean isrunning=true;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("Note","Service Started");
         //define the thread
-        Thread thread= new Thread() {
+        thread= new Thread() {
             @Override
             public void run() {
                 //check for Connectivity
@@ -40,23 +41,40 @@ public class TriggerThreadService extends Service{
                         Log.d(MESSAGE_TAG,"Connection Type : "+CONNECTION_TYPE);
                     else
                     //it is connected but not through wifi or mobile data then we don't want it
-                    this.interrupt();
+                    isrunning=false;
                     try {
-                        //make any task you want every 5 seconds 'I made it only 5 sec to see the results faster instead of waiting 30 seconds'
+                        //make any task you want every 5 seconds 'I made it only 5 sec to see the results
+                        // faster instead of waiting 30 seconds
                         Thread.sleep(5000);
                         Log.d(MESSAGE_TAG,"thread running");
                     } catch (InterruptedException e) {
                         Log.d(MESSAGE_TAG,"thread is killed");
                     }
+                    isrunning=false;
                 }
                 //if no Connection is Active Kill the thread
                 Log.d(MESSAGE_TAG,"thread will be killed");
-                this.interrupt();
             }
         };
 
         //start the thread
         thread.start();
-        return super.onStartCommand(intent, flags, startId);
+        try {
+            //wait for the thread to finish
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        thread.interrupt();
+        stopSelf();
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("note","Service is down");
+        thread.interrupt();
+        Log.d("note","thread is killed");
     }
 }
