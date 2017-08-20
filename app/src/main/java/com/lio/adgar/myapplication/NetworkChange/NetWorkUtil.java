@@ -1,4 +1,4 @@
-package com.lio.adgar.myapplication;
+package com.lio.adgar.myapplication.NetworkChange;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

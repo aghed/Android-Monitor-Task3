@@ -21,7 +21,7 @@
         </activity>
 
         <service
-            android:name=".TriggerThreadService"
+            android:name=".NetworkChange.TriggerThreadService"
             android:enabled="true"
             android:exported="false"/>
     </application>

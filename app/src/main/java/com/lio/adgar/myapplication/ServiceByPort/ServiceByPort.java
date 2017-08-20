@@ -1,12 +1,10 @@
-package com.lio.adgar.myapplication.ExtraTask;
+package com.lio.adgar.myapplication.ServiceByPort;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import java.io.File;
 
 /**
  * Created by AGHED on 16/08/2017.

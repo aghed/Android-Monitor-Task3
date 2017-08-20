@@ -1,11 +1,10 @@
-package com.lio.adgar.myapplication;
+package com.lio.adgar.myapplication.NetworkChange;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Created by AGHED on 14/08/2017.
@@ -19,7 +18,6 @@ public class TriggerThreadService extends Service{
     public IBinder onBind(Intent intent) {
         return null;
     }
-    private Boolean isrunning=true;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("Note","Service Started");
@@ -41,7 +39,7 @@ public class TriggerThreadService extends Service{
                         Log.d(MESSAGE_TAG,"Connection Type : "+CONNECTION_TYPE);
                     else
                     //it is connected but not through wifi or mobile data then we don't want it
-                    isrunning=false;
+                    return;
                     try {
                         //make any task you want every 5 seconds 'I made it only 5 sec to see the results
                         // faster instead of waiting 30 seconds
@@ -50,23 +48,13 @@ public class TriggerThreadService extends Service{
                     } catch (InterruptedException e) {
                         Log.d(MESSAGE_TAG,"thread is killed");
                     }
-                    isrunning=false;
                 }
                 //if no Connection is Active Kill the thread
                 Log.d(MESSAGE_TAG,"thread will be killed");
+                stopSelf();
             }
         };
-
-        //start the thread
         thread.start();
-        try {
-            //wait for the thread to finish
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        thread.interrupt();
-        stopSelf();
         return START_STICKY;
     }
 
